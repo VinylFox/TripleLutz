@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'sinatra'
 require 'json'
 require 'github'
@@ -8,12 +9,16 @@ require 'github'
 #   DataMapper.auto_migrate!
 # end
 
+get '/' do
+  return File.open('index.html')
+end
+
 post '/event/create' do
   # add new event to the database
   {:success => true, :event_id => 1}.to_json
 end
 
-post '/event/start' do
+get '/event/start' do
   # params[:event_id]
   # the event has begun!
   {:success => true}.to_json
