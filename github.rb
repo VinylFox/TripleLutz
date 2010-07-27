@@ -3,10 +3,23 @@ require 'httparty'
 class Github
   def self.get(gh_login, gh_repo)
     raise "gh_login and gh_repo are both required" unless gh_login != nil && gh_repo != nil
-    p HTTParty.get "http://github.com/api/v2/json/repos/show/#{gh_login}/#{gh_repo}/network/"
-
-    # {"network"=>[{"name"=>"JavaScriptOlympics", "has_wiki"=>true, "created_at"=>"2010/06/17 11:40:52 -0700", "watchers"=>10, "private"=>false, "url"=>"http://github.com/VinylFox/JavaScriptOlympics", "fork"=>false, "pushed_at"=>"2010/07/08 07:11:27 -0700", "has_downloads"=>true, "open_issues"=>0, "homepage"=>"http://www.bmorejs.info/", "has_issues"=>true, "forks"=>8, "description"=>"Code used for and created by the JavaScript Olympics", "owner"=>"VinylFox"}, {"name"=>"JavaScriptOlympics", "has_wiki"=>true, "created_at"=>"2010/07/07 15:44:18 -0700", "watchers"=>1, "private"=>false, "url"=>"http://github.com/jvose/JavaScriptOlympics", "fork"=>true, "pushed_at"=>"2010/07/07 16:52:37 -0700", "has_downloads"=>true, "open_issues"=>0, "homepage"=>"http://www.bmorejs.info/", "has_issues"=>false, "forks"=>0, "description"=>"Code used for and created by the JavaScript Olympics", "owner"=>"jvose"}, {"name"=>"JavaScriptOlympics", "has_wiki"=>true, "created_at"=>"2010/07/07 15:48:13 -0700", "watchers"=>1, "private"=>false, "url"=>"http://github.com/lokesh/JavaScriptOlympics", "fork"=>true, "pushed_at"=>"2010/07/07 17:22:57 -0700", "has_downloads"=>true, "open_issues"=>0, "homepage"=>"http://www.bmorejs.info/", "has_issues"=>false, "forks"=>0, "description"=>"Code used for and created by the JavaScript Olympics", "owner"=>"lokesh"}, {"name"=>"JavaScriptOlympics", "has_wiki"=>true, "created_at"=>"2010/07/07 15:55:49 -0700", "watchers"=>1, "private"=>false, "url"=>"http://github.com/briansloane/JavaScriptOlympics", "fork"=>true, "pushed_at"=>"2010/07/07 18:06:01 -0700", "has_downloads"=>true, "open_issues"=>0, "homepage"=>"http://www.bmorejs.info/", "has_issues"=>false, "forks"=>0, "description"=>"Code used for and created by the JavaScript Olympics", "owner"=>"briansloane"}, {"name"=>"JavaScriptOlympics", "has_wiki"=>true, "created_at"=>"2010/07/07 15:58:56 -0700", "watchers"=>1, "private"=>false, "url"=>"http://github.com/tdgi/JavaScriptOlympics", "fork"=>true, "pushed_at"=>"2010/07/07 17:23:24 -0700", "has_downloads"=>true, "open_issues"=>0, "homepage"=>"http://www.bmorejs.info/", "has_issues"=>false, "forks"=>0, "description"=>"Code used for and created by the JavaScript Olympics", "owner"=>"tdgi"}, {"name"=>"JavaScriptOlympics", "has_wiki"=>true, "created_at"=>"2010/07/07 15:59:17 -0700", "watchers"=>1, "private"=>false, "url"=>"http://github.com/JAAulde/JavaScriptOlympics", "fork"=>true, "pushed_at"=>"2010/07/07 17:21:55 -0700", "has_downloads"=>true, "open_issues"=>0, "homepage"=>"http://www.bmorejs.info/", "has_issues"=>false, "forks"=>0, "description"=>"Code used for and created by the JavaScript Olympics", "owner"=>"JAAulde"}, {"name"=>"JavaScriptOlympics", "has_wiki"=>true, "created_at"=>"2010/07/07 16:00:17 -0700", "watchers"=>1, "private"=>false, "url"=>"http://github.com/jfsiii/JavaScriptOlympics", "fork"=>true, "pushed_at"=>"2010/07/07 16:44:51 -0700", "has_downloads"=>true, "open_issues"=>0, "homepage"=>"http://www.bmorejs.info/", "has_issues"=>false, "forks"=>0, "description"=>"Code used for and created by the JavaScript Olympics", "owner"=>"jfsiii"}, {"name"=>"JavaScriptOlympics", "has_wiki"=>true, "created_at"=>"2010/07/07 16:08:45 -0700", "watchers"=>1, "private"=>false, "url"=>"http://github.com/scottmessinger/JavaScriptOlympics", "fork"=>true, "pushed_at"=>"2010/07/07 17:19:49 -0700", "has_downloads"=>true, "open_issues"=>0, "homepage"=>"http://www.bmorejs.info/", "has_issues"=>false, "forks"=>0, "description"=>"Code used for and created by the JavaScript Olympics", "owner"=>"scottmessinger"}, {"name"=>"JavaScriptOlympics", "has_wiki"=>true, "created_at"=>"2010/07/07 16:11:08 -0700", "watchers"=>1, "private"=>false, "url"=>"http://github.com/jjulian/JavaScriptOlympics", "fork"=>true, "pushed_at"=>"2010/07/07 18:17:44 -0700", "has_downloads"=>true, "open_issues"=>0, "homepage"=>"http://www.bmorejs.info/", "has_issues"=>false, "forks"=>0, "description"=>"Code used for and created by the JavaScript Olympics", "owner"=>"jjulian"}]}
-
-    # { 'data' => [{entry_id => 7, gh_login => 'jjulian', :latest_commit_date => '2010-07-25 19:32:00', :latest_commit_id => 'shsjhgsdjkhgsjkgdjs', :score => 5.4}] }
+    data = HTTParty.get "http://github.com/api/v2/json/repos/show/#{gh_login}/#{gh_repo}/network/"
+    forks = data['network'].map do |fork|
+      { 'entry_id' => 7, 'gh_login' => fork['owner'], 'latest_commit_date' => fork['pushed_at'], 'latest_commit_id' => 'todo', 'score' => 5.4 }
+    end
+    { 'data' => forks }
   end
 end
+
+# {"network"=>[
+#   {"name"=>"JavaScriptOlympics", "has_wiki"=>true, "created_at"=>"2010/06/17 11:40:52 -0700", 
+#   "watchers"=>10, "private"=>false, "url"=>"http://github.com/VinylFox/JavaScriptOlympics", "fork"=>false, 
+#   "pushed_at"=>"2010/07/08 07:11:27 -0700", "has_downloads"=>true, "open_issues"=>0, "homepage"=>"http://www.bmorejs.info/",
+#   "has_issues"=>true, "forks"=>8, "description"=>"Code used for and created by the JavaScript Olympics", "owner"=>"VinylFox"},
+# 
+#   {"name"=>"JavaScriptOlympics", "has_wiki"=>true, "created_at"=>"2010/07/07 16:11:08 -0700", "watchers"=>1, 
+#    "private"=>false, "url"=>"http://github.com/jjulian/JavaScriptOlympics", "fork"=>true, 
+#    "pushed_at"=>"2010/07/07 18:17:44 -0700", "has_downloads"=>true, "open_issues"=>0, 
+#    "homepage"=>"http://www.bmorejs.info/", "has_issues"=>false, "forks"=>0, 
+#    "description"=>"Code used for and created by the JavaScript Olympics", "owner"=>"jjulian"}
+# ]}
